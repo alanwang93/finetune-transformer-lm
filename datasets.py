@@ -1,6 +1,7 @@
 import os
 import csv
 import numpy as np
+import json
 
 from tqdm import tqdm
 
@@ -49,3 +50,21 @@ def rocstories(data_dir, n_train=1497, n_valid=374):
     trY = np.asarray(trY, dtype=np.int32)
     vaY = np.asarray(vaY, dtype=np.int32)
     return (trX1, trX2, trX3, trY), (vaX1, vaX2, vaX3, vaY), (teX1, teX2, teX3)
+
+
+def squad(data_dir, n_train, n_valid, version=1):
+
+    def _squad(path):
+        with open(path) as f:
+            obj = json.load(f)
+            for data in obj['data']:
+                for p in data['paragraphs']:
+                    ctx = p['context'].strip()
+                    for qa in p['qas']:
+                        q = qa['question'].strip()
+                        qid = qa['id']
+                        ans = json.dumps(qa['answers'])
+                        imp = qa['is_impossible']
+
+
+
